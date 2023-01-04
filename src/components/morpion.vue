@@ -118,10 +118,11 @@ export default {
 </script>
 
 <template>
-    <h1>MORPION</h1>
-    <h2>Score :</h2>
 
-    <div class="scoreBoard">{{ players.player1.name }} {{ players.player1.score }} / {{ players.player2.score }} {{players.player2.name}}</div>
+<div class="scoreBoard" v-if="!party.state">
+    <h2>Score :</h2> 
+    {{ players.player1.name }} {{ players.player1.score }} / {{ players.player2.score }} {{ players.player2.name }}
+</div>
 
     <table>
         <tr id="row1">
@@ -141,8 +142,8 @@ export default {
         </tr>
     </table>
 
-    <button @click="newParty">nouvelle manche</button>
-    <button @click="initGame">nouvelle partie</button>
+    <button class="playBtn" @click="newParty">nouvelle manche</button>
+    <button class="playBtn" @click="initGame">nouvelle partie</button>
 </template>
 
 <style>
@@ -161,7 +162,8 @@ td {
     height: 150px;
     font: bold 50px arial;
     padding: 0;
-    background-color: #EAEAEA;
+    background-color: #eaeaea2a;
+    backdrop-filter: blur(20px);
 }
 
 .scoreBoard {
@@ -170,6 +172,8 @@ td {
     padding: 10px;
     margin: 10px;
     border-radius: 5px;
-    box-shadow: 0 0 6px 1px #C0D6DF;
+    box-shadow: 0 0 0px 1px #0fa0d9;
+    background-color: #eaeaea71;
+    backdrop-filter: blur(20px);
 }
 </style>
