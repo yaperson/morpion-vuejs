@@ -1,9 +1,9 @@
 <template>
     <h1>MORPION</h1>
 
-    <button @click="show = !show" class="playBtn" v-if="!show">Play</button>
+    <button @click="inParty = !inParty" class="playBtn" v-if="!inParty" :on-click="newParty">Play</button>
     <transition>
-        <morpion v-if="show" />
+        <morpion v-if="inParty" />
     </transition>
     <img src="../../public/395930-wallpaper-synthwave-retrowave-grid-4k-hd.jpg" alt="" class="bg">
 </template>
@@ -18,7 +18,7 @@ export default {
 
     data() {
         return {
-            show: null
+            inParty: null
         }
     },
 }

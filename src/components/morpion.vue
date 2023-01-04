@@ -25,13 +25,10 @@ export default {
     },
 
     methods: {
+        
         // set players scores and party state for start or restart party
-        initGame() {
+        reloadGame() {
             window.location.reload();
-        },
-
-        newParty() {
-            this.party.state = true;
         },
 
         // Action when user play
@@ -142,8 +139,7 @@ export default {
         </tr>
     </table>
 
-    <button class="playBtn" @click="newParty">nouvelle manche</button>
-    <button class="playBtn" @click="initGame">nouvelle partie</button>
+    <button class="playBtn" @click="reloadGame">nouvelle partie</button>
 </template>
 
 <style>
