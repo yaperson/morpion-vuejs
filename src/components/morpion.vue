@@ -8,53 +8,54 @@ export default {
                     name: "player1",
                     score: 0,
                     isPlay: true,
-                    cases: []
+                    cases: [],
                 },
                 player2: {
                     id: 1,
                     name: "player2",
                     score: 0,
                     isPlay: true,
-                    cases: []
-                }
+                    cases: [],
+                },
             },
             party: {
-                state: true
-            }
-        }
+                state: true,
+            },
+        };
     },
 
     methods: {
         // set players scores and party state for start or restart party
         initGame() {
-            window.location.reload()
+            window.location.reload();
         },
 
         newParty() {
-            this.party.state = true
+            this.party.state = true;
         },
 
         // Action when user play
         changeValue(event) {
-            let targetId = event.currentTarget.id
-            let row = event.currentTarget.parentNode
-            let player1 = this.players.player1
-            let player2 = this.players.player2
+            let targetId = event.currentTarget.id;
+            let row = event.currentTarget.parentNode;
+            let player1 = this.players.player1;
+            let player2 = this.players.player2;
 
-            if (player1.isPlay == true) {
-                if (!row.querySelector("#" + targetId).innerText) {
-                    row.querySelector("#" + targetId).innerText = "X"
-                    player1.cases.push(targetId)
-                    this.changePlayer()
-                    this.checkScore(player1, row)
-                }
-            }
-            else {
-                if (!row.querySelector("#" + targetId).innerText) {
-                    row.querySelector("#" + targetId).innerText = "O"
-                    player2.cases.push(targetId)
-                    this.changePlayer()
-                    this.checkScore(player2, row)
+            if (this.party.state === true) {
+                if (player1.isPlay == true) {
+                    if (!row.querySelector("#" + targetId).innerText) {
+                        row.querySelector("#" + targetId).innerText = "X";
+                        player1.cases.push({ case: targetId, row: row.id });
+                        this.changePlayer();
+                        this.checkScore(player1);
+                    }
+                } else {
+                    if (!row.querySelector("#" + targetId).innerText) {
+                        row.querySelector("#" + targetId).innerText = "O";
+                        player2.cases.push({ case: targetId, row: row.id });
+                        this.changePlayer();
+                        this.checkScore(player2);
+                    }
                 }
             }
         },
@@ -62,61 +63,65 @@ export default {
         // Change player statut (isPlay?)
         changePlayer() {
             if (this.players.player1.isPlay == true) {
-                this.players.player1.isPlay = false
-                this.players.player2.isPlay = true
+                this.players.player1.isPlay = false;
+                this.players.player2.isPlay = true;
             } else {
-                this.players.player1.isPlay = true
-                this.players.player2.isPlay = false
+                this.players.player1.isPlay = true;
+                this.players.player2.isPlay = false;
             }
         },
 
         // Check score of last player
-        checkScore(player, row) {
-            let case1 = 0
-            let case2 = 0
-            let case3 = 0
+        checkScore(player) {
+            let angleTG = 0;
+            let midleT = 0;
+            let angleTD = 0;
 
-            console.log(player)
+            let midleG = 0;
+            let midleC = 0;
+            let midleD = 0;
+
+            let angleBG = 0;
+            let midleB = 0;
+            let angleBD = 0;
+
             for (let elem in player.cases) {
-                switch (player.cases[elem]) {
-                    case 'case1': case1++
-                        break;
-                    case 'case2': case2++
-                        break;
-                    case 'case3': case3++
-                        break;
-                    default: console.log(`il semble y avoir un problème`);
-                }
+                let playerCases = player.cases[elem];
+
+                if (playerCases.case == "case1" && playerCases.row == "row1") angleTG++;
+                if (playerCases.case == "case2" && playerCases.row == "row1") midleT++;
+                if (playerCases.case == "case3" && playerCases.row == "row1") angleTD++;
+                if (playerCases.case == "case1" && playerCases.row == "row2") midleG++;
+                if (playerCases.case == "case2" && playerCases.row == "row2") midleC++;
+                if (playerCases.case == "case3" && playerCases.row == "row2") midleD++;
+                if (playerCases.case == "case1" && playerCases.row == "row3") angleBG++;
+                if (playerCases.case == "case2" && playerCases.row == "row3") midleB++;
+                if (playerCases.case == "case3" && playerCases.row == "row3") angleBD++;
             }
 
             if (
-                case1 == 3 || 
-                case2 == 3 ||
-                case3 == 3 
-            ) player.score++
-
-            if (case1 >= 1 || case2 >= 1 || case3 >= 1) {
-                // TODO check if it's diagonal
+                angleTG + midleT + angleTD == 3 ||
+                midleG + midleC + midleD == 3 ||
+                angleBG + midleB + angleBD == 3 ||
+                angleTG + midleG + angleBG == 3 ||
+                midleT + midleC + midleB == 3 ||
+                angleTD + midleD + angleBD == 3 ||
+                angleTG + midleC + angleBD == 3 ||
+                angleTD + midleC + angleBG == 3
+            ) {
+                player.score++;
+                this.party.state = false;
             }
-            switch(row) {
-                case row.querySelector("#case1"):
-
-                case row.querySelector("#case2"):
-                
-                case row.querySelector("#case3"):
-            }
-        }
+        },
     },
-
-}
+};
 </script>
 
 <template>
     <h1>MORPION</h1>
-    <h2>Score : </h2>
+    <h2>Score :</h2>
 
-    <div>{{ players.player1.name }} {{ players.player1.score }}</div>
-    <div>{{ players.player2.name }} {{ players.player2.score }}</div>
+    <div class="scoreBoard">{{ players.player1.name }} {{ players.player1.score }} / {{ players.player2.score }} {{players.player2.name}}</div>
 
     <table>
         <tr id="row1">
@@ -138,23 +143,33 @@ export default {
 
     <button @click="newParty">nouvelle manche</button>
     <button @click="initGame">nouvelle partie</button>
-
 </template>
 
 <style>
 table {
+    user-select: none;
     width: 500px;
     height: 500px;
-    border: solid red;
 }
 
 td {
+    cursor: pointer;
     text-align: center;
+    max-width: 50px;
+    max-height: 50px;
+    width: 150px;
+    height: 150px;
+    font: bold 50px arial;
+    padding: 0;
+    background-color: #EAEAEA;
+}
+
+.scoreBoard {
+    width: fit-content;
+    font: bold;
     padding: 10px;
-    box-shadow: 0 0 1px 0 blue;
-    max-width: 20px;
-    max-height: 20px;
-    width: 20px;
-    height: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 6px 1px #C0D6DF;
 }
 </style>
