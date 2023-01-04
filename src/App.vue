@@ -1,10 +1,11 @@
 <script setup>
-  import morpion from './components/morpion.vue'
+  // import morpion from './components/morpion.vue'
+  import page from './components/page.vue'
 </script>
 
 <template>
   <main>
-    <morpion />
+    <page />
   </main>
 </template>
 
